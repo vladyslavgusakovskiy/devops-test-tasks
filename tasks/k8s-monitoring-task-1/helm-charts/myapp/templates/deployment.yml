@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.common.mainName }}-deployment
+  namespace: {{ .Values.common.namespace }}
+  labels:
+    app: {{ .Values.common.label }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.common.label }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.common.label }}
+    spec:
+      containers:
+      - name: {{ .Values.myappDeploy.image.name }}
+        image:  {{ .Values.myappDeploy.image.repository }}:{{ .Values.myappDeploy.image.tag }}
+        resources:
+          requests:
+            memory: {{ .Values.myappDeploy.resources.requests.memory }}
+            cpu: {{ .Values.myappDeploy.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.myappDeploy.resources.limits.memory }}
+            cpu: {{ .Values.myappDeploy.resources.limits.cpu }}
+        ports:
+        - containerPort: {{ .Values.common.appPort }}
+        env:
+        - name: APP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.common.mainName }}-config
+              key: APP_PORT
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.common.mainName }}-secret
+              key: SECRET_KEY
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.myappDeploy.livenessProbe.httpGet.path }}
+            port: {{ .Values.common.appPort }}
+          initialDelaySeconds: {{ .Values.myappDeploy.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.myappDeploy.livenessProbe.periodSeconds }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.myappDeploy.readinessProbe.httpGet.path }}
+            port: {{ .Values.common.appPort }}
+          initialDelaySeconds: {{ .Values.myappDeploy.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.myappDeploy.readinessProbe.periodSeconds }}
