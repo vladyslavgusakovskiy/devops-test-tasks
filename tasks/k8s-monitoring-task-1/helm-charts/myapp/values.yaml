@@ -1,6 +1,6 @@
 common:
   mainName: myapp
-  namespace: k8s-monitoring-task-ns
+  namespace: dev
   label: myapp-label
   appPort: 8000
 
@@ -8,7 +8,7 @@ myappDeploy:
   image:
     name: myapp-container
     repository: vlad584/k8s-monitoring-task-1
-    tag: "3.0"
+    tag: "4.0"
   resources:
     requests:
       memory: "64Mi"
@@ -49,3 +49,4 @@ myappClusterIP:
   ports:
     protocol: TCP
     port: 80
+    name: http-metrics

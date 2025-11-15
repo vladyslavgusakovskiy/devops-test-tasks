@@ -8,6 +8,7 @@ spec:
   selector:
     app: {{ .Values.common.label }}
   ports:
-    - protocol: {{ .Values.myappClusterIP.ports.protocol }}
-      port: {{ .Values.myappClusterIP.ports.port }}
-      targetPort: {{ .Values.common.appPort }}
+  - protocol: {{ .Values.myappClusterIP.ports.protocol }}
+    port: {{ .Values.myappClusterIP.ports.port }}
+    targetPort: {{ .Values.common.appPort }}
+    name: {{ .Values.myappClusterIP.ports.name }}
