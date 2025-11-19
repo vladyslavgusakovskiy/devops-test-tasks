@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: {{ .Values.common.mainName }}-clusterip-service
   namespace: {{ .Values.common.namespace }}
+  labels:
+    app: {{ .Values.common.label }}
 spec:
   type: ClusterIP
   selector:
