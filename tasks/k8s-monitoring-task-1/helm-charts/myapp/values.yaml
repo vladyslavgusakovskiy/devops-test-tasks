@@ -50,3 +50,7 @@ myappClusterIP:
     protocol: TCP
     port: 80
     name: http-metrics
+
+myappIngress:
+  rules:
+    host: myapp.example.com
