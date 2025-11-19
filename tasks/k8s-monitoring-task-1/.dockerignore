@@ -1,0 +1,35 @@
+# Git
+.git
+.gitignore
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# OS garbage
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.log
+*.tmp
+*.bak
+
+# Local dev files
+*.env
+.env.*
+tests/
+docs/
+examples/
+README.md
+
+# Docker
+docker-compose*.yml
+Dockerfile*

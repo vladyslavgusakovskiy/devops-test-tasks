@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myapp-config
+  namespace: k8s-monitoring-task-ns
+data:
+  APP_PORT: "8000"
