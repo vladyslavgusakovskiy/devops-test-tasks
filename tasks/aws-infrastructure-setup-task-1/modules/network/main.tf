@@ -1,9 +1,20 @@
-resource "aws_subnet" "public" {
+resource "aws_subnet" "public_1" {
   vpc_id     = var.vpc_id
-  cidr_block = var.public_subnet_cidr
+  cidr_block = var.public_subnet_1_cidr
+  availability_zone = var.public_subnet_1_az
 
   tags = {
-    Name = var.public_subnet_name
+    Name = var.public_subnet_1_name
+  }
+}
+
+resource "aws_subnet" "public_2" {
+  vpc_id     = var.vpc_id
+  cidr_block = var.public_subnet_2_cidr
+  availability_zone = var.public_subnet_2_az
+
+  tags = {
+    Name = var.public_subnet_2_name
   }
 }
 
@@ -30,7 +41,7 @@ resource "aws_eip" "nat_eip" {
 
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat_eip.id
-  subnet_id     = aws_subnet.public.id
+  subnet_id     = aws_subnet.public_1.id
 }
 
 resource "aws_route_table" "public" {
@@ -52,11 +63,16 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route_table_association" "a" {
-  subnet_id      = aws_subnet.public.id
+  subnet_id      = aws_subnet.public_1.id
   route_table_id = aws_route_table.public.id
 }
 
 resource "aws_route_table_association" "b" {
+  subnet_id      = aws_subnet.public_2.id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table_association" "c" {
   subnet_id      = aws_subnet.private.id
   route_table_id = aws_route_table.private.id
 }
