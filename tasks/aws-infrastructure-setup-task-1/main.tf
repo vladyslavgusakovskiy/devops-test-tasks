@@ -28,7 +28,7 @@ module "tm_ecs_module" {
   source                        = "./modules/ecs"
   tm_efs_id                     = module.tm_efs_module.efs_id
   tm_subnet_private_id          = module.tm_network_services_module.tm_subnet_private_id
-  tm_security_group_id          = module.tm_sg_module.tm_efs_security_group_id
+  tm_ecs_security_group_id      = module.tm_sg_module.tm_ecs_security_group_id
   ecs_execution_role_arn        = module.tm_iam_module.ecs_execution_role_arn
   ecs_task_role_arn             = module.tm_iam_module.ecs_task_role_arn
   ecs_execution_role_attachment = module.tm_iam_module.ecs_execution_role_attachment_id
@@ -37,8 +37,17 @@ module "tm_ecs_module" {
 
 module "tm_alb_module" {
   source            = "./modules/alb"
-  security_group_id = module.tm_sg_module.tm_efs_security_group_id
+  security_group_id = module.tm_sg_module.tm_ald_security_group_id
   subnet_pub_1_id   = module.tm_network_services_module.tm_subnet_public_1_id
   subnet_pub_2_id   = module.tm_network_services_module.tm_subnet_public_2_id
   vpc_id            = module.tm_vpc_module.vpc_id
+}
+
+module "tm_vm_instance_module" {
+  source                      = "./modules/vm"
+  subnet_public_id            = module.tm_network_services_module.tm_subnet_public_id
+  security_group_id           = module.tm_sg_module.tm_vm_security_group_id
+  efs_id                      = module.tm_efs_module.efs_id
+  efs_mount_target_ip_address = module.tm_efs_module.efs_mount_target_ip_address
+  depends_on = [module.tm_efs_module]
 }

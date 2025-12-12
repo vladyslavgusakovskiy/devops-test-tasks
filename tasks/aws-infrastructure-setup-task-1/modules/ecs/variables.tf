@@ -8,7 +8,7 @@ variable "tm_subnet_private_id" {
     type        = string
 }
 
-variable "tm_security_group_id" {
+variable "tm_ecs_security_group_id" {
     description = "The ID of the security group to be used by ECS tasks"
     type        = string
 }

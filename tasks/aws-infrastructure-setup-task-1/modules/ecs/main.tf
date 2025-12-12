@@ -54,7 +54,7 @@ resource "aws_ecs_service" "tm-devops-ecs-service" {
 
   network_configuration {
     subnets         = [var.tm_subnet_private_id]
-    security_groups = [var.tm_security_group_id]
+    security_groups = [var.tm_ecs_security_group_id]
     assign_public_ip = false
   }
 
