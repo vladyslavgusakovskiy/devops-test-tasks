@@ -1,0 +1,68 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Version control
+.hg
+.svn
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Dependencies
+node_modules
+vendor
+.bundle
+.venv
+venv
+env
+
+# Build artifacts
+dist
+build
+*.o
+*.so
+*.egg-info
+
+# Logs
+*.log
+logs
+
+# Environment files
+.env
+.env.local
+
+# Test coverage
+coverage
+.coverage
+
+# Docker
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Documentation
+docs
+README.md
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
