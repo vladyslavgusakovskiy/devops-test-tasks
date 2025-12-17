@@ -12,7 +12,11 @@ DB_PASS = os.getenv("DB_PASS", "postgres")
 
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    return {"status": "healthy"}
+
+@app.get("/ready")
+def ready():
+    return {"status": "ready"}
 
 
 @app.get("/users")
