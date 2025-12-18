@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: myapp-configMap
 data:
-  DB_HOST: "localhost"
+  DB_HOST: "postgres-service"
   DB_NAME: "testdb"
