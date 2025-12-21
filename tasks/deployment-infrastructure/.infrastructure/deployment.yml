@@ -19,18 +19,22 @@ spec:
         - name: DB_HOST
           valueFrom:
             configMapKeyRef:
+              name: myapp-config
               key: DB_HOST
         - name: DB_NAME
           valueFrom:
             configMapKeyRef:
+              name: myapp-config
               key: DB_NAME
         - name: DB_USER
           valueFrom:
             secretKeyRef:
+              name: myapp-secret
               key: DB_USER
         - name: DB_PASS
           valueFrom:
             secretKeyRef:
+              name: myapp-secret
               key: DB_PASS
         resources:
           requests:
