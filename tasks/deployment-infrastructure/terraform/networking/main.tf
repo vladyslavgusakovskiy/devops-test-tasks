@@ -55,10 +55,20 @@ resource "aws_route_table_association" "public_subnet" {
 }
 
 # ------------ Create Private Subnets -------------
-resource "aws_subnet" "private" {
+resource "aws_subnet" "private_1" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = var.private_subnet_cidr
+  cidr_block = var.private_subnet_cidr_1
   availability_zone = data.aws_availability_zones.available.names[0]
+
+  tags = {
+    Name = "Private"
+  }
+}
+
+resource "aws_subnet" "private_2" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = var.private_subnet_cidr_2
+  availability_zone = data.aws_availability_zones.available.names[1]
 
   tags = {
     Name = "Private"
@@ -80,8 +90,13 @@ resource "aws_route_table" "private_rt" {
 }
 
 # ------------- Associate the route table with the private subnets -------------
-resource "aws_route_table_association" "private_subnet" {
-  subnet_id      = aws_subnet.private.id
+resource "aws_route_table_association" "private_subnet_1" {
+  subnet_id      = aws_subnet.private_1.id
+  route_table_id = aws_route_table.private_rt.id
+}
+
+resource "aws_route_table_association" "private_subnet_2" {
+  subnet_id      = aws_subnet.private_2.id
   route_table_id = aws_route_table.private_rt.id
 }
 
