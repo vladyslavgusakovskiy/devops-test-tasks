@@ -16,6 +16,9 @@ module "eks_module" {
   subnet_private_id_1 = module.networking_module.subnet_private_id_1
   subnet_private_id_2 = module.networking_module.subnet_private_id_2
   aim_role_eks_arn = module.aim_module.aim_role_eks_arn
+  iam_role_nodes_arn = module.aim_module.aim_role_nodes_arn
+  eks_worker_node_policy = module.aim_module.eks_worker_node_policy
+  ec2_container_registry_read_only = module.aim_module.ec2_container_registry_read_only
 
   depends_on = [ module.aim_module ]
 }
