@@ -7,17 +7,23 @@ variable "iam_role_nodes_arn" {
 }
 
 variable "subnet_private_id_1" {
-  type = number
-}
-
-variable "subnet_private_id_2" {
-  type = number
-}
-
-variable "eks_worker_node_policy" {
   type = string
 }
 
-variable "ec2_container_registry_read_only" {
+variable "subnet_private_id_2" {
+  type = string
+}
+
+variable "eks_cluster_name" {
+  type = string
+  default = "eks-cluster-name"
+}
+
+variable "eks_node_group_name" {
+  type = string
+  default = "eks-node-group"
+}
+
+variable "iam_role_aws_lbc_arn" {
   type = string
 }

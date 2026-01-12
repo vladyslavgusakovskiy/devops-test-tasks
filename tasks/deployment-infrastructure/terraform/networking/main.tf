@@ -23,14 +23,29 @@ resource "aws_internet_gateway" "gw" {
 }
 
 # ------------ Create Public Subnets -------------
-resource "aws_subnet" "public" {
+resource "aws_subnet" "public_1" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = var.public_subnet_cidr
+  cidr_block = var.public_subnet_cidr_1
   availability_zone = data.aws_availability_zones.available.names[0]
   map_public_ip_on_launch = true
 
   tags = {
     Name = "Public"
+    "kubernetes.io/role/elb"                    = "1"
+    "kubernetes.io/cluster/eks-cluster-name" = "shared"
+  }
+}
+
+resource "aws_subnet" "public_2" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = var.public_subnet_cidr_2
+  availability_zone = data.aws_availability_zones.available.names[1]
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "Public"
+    "kubernetes.io/role/elb"                    = "1"
+    "kubernetes.io/cluster/eks-cluster-name" = "shared"
   }
 }
 
@@ -49,10 +64,16 @@ resource "aws_route_table" "public_rt" {
 }
 
 # ------------- Associate the route table with the public subnets -------------
-resource "aws_route_table_association" "public_subnet" {
-  subnet_id      = aws_subnet.public.id
+resource "aws_route_table_association" "public_subnet_1" {
+  subnet_id      = aws_subnet.public_1.id
   route_table_id = aws_route_table.public_rt.id
 }
+
+resource "aws_route_table_association" "public_subnet_2" {
+  subnet_id      = aws_subnet.public_2.id
+  route_table_id = aws_route_table.public_rt.id
+}
+
 
 # ------------ Create Private Subnets -------------
 resource "aws_subnet" "private_1" {
@@ -62,6 +83,8 @@ resource "aws_subnet" "private_1" {
 
   tags = {
     Name = "Private"
+    "kubernetes.io/role/internal-elb"           = "1"
+    "kubernetes.io/cluster/eks-cluster-name" = "shared"
   }
 }
 
@@ -72,7 +95,25 @@ resource "aws_subnet" "private_2" {
 
   tags = {
     Name = "Private"
+    "kubernetes.io/role/internal-elb"           = "1"
+    "kubernetes.io/cluster/eks-cluster-name" = "shared"
   }
+}
+
+# ------------- Create a NAT Gateway for private subnets -------------
+resource "aws_eip" "nat" {
+  domain   = "vpc"
+}
+
+resource "aws_nat_gateway" "nat" {
+  allocation_id = aws_eip.nat.id
+  subnet_id     = aws_subnet.public_1.id
+
+  tags = {
+    Name = "gw NAT"
+  }
+
+  depends_on = [aws_internet_gateway.gw]
 }
 
 # ------------- Create a route table for the private subnets -------------
@@ -81,7 +122,7 @@ resource "aws_route_table" "private_rt" {
 
   route {
     cidr_block = var.route_cidr_block
-    gateway_id = aws_internet_gateway.gw.id
+    nat_gateway_id = aws_nat_gateway.nat.id
   }
 
   tags = {
@@ -98,20 +139,4 @@ resource "aws_route_table_association" "private_subnet_1" {
 resource "aws_route_table_association" "private_subnet_2" {
   subnet_id      = aws_subnet.private_2.id
   route_table_id = aws_route_table.private_rt.id
-}
-
-# ------------- Create a NAT Gateway for private subnets -------------
-resource "aws_eip" "nat" {
-  domain   = "vpc"
-}
-
-resource "aws_nat_gateway" "nat" {
-  allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.public.id
-
-  tags = {
-    Name = "gw NAT"
-  }
-
-  depends_on = [aws_internet_gateway.gw]
 }

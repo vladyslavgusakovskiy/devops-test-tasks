@@ -1,5 +1,5 @@
 resource "aws_eks_cluster" "eks" {
-  name = "eks-cluster-name"
+  name = var.eks_cluster_name
 
   access_config {
     authentication_mode = "API"
@@ -19,7 +19,7 @@ resource "aws_eks_cluster" "eks" {
 resource "aws_eks_node_group" "eks" {
   cluster_name    = aws_eks_cluster.eks.name
   version  = "1.31"
-  node_group_name = "eks-node-group"
+  node_group_name = var.eks_node_group_name
   node_role_arn   = var.iam_role_nodes_arn
   subnet_ids      = [
     var.subnet_private_id_1,
@@ -27,7 +27,7 @@ resource "aws_eks_node_group" "eks" {
   ]
 
   capacity_type = "ON_DEMAND"
-  instance_types = [ "t3.large" ]
+  instance_types = [ "t3.small" ]
 
   scaling_config {
     desired_size = 1
@@ -38,9 +38,21 @@ resource "aws_eks_node_group" "eks" {
   update_config {
     max_unavailable = 1
   }
+}
 
-  depends_on = [
-    var.eks_worker_node_policy,
-    var.ec2_container_registry_read_only
+resource "aws_eks_addon" "pod_identity" {
+  cluster_name = aws_eks_cluster.eks.name
+  addon_name   = "eks-pod-identity-agent"
+}
+
+resource "aws_eks_pod_identity_association" "aws_lbc" {
+  cluster_name = var.eks_cluster_name
+  namespace = "kube-system"
+  service_account = "aws-load-balancer-controller"
+  role_arn = var.iam_role_aws_lbc_arn
+
+   depends_on = [
+    aws_eks_addon.pod_identity,
+    aws_eks_node_group.eks
   ]
 }
