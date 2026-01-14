@@ -23,10 +23,20 @@ module "eks_module" {
   depends_on = [module.aim_module]
 }
 
-module "helm_module" {
-  source           = "./helm"
-  eks_cluster_name = module.eks_module.eks_cluster_name
-  vpc_id           = module.networking_module.vpc_id
+# module "helm_module" {
+#   source           = "./helm"
+#   eks_cluster_name = module.eks_module.eks_cluster_name
+#   vpc_id           = module.networking_module.vpc_id
+
+#   depends_on = [module.eks_module]
+# }
+
+module "rds_module" {
+  source              = "./rds"
+  vpc_id              = module.networking_module.vpc_id
+  eks_cluster_name    = module.eks_module.eks_cluster_name
+  subnet_private_id_1 = module.networking_module.subnet_private_id_1
+  subnet_private_id_2 = module.networking_module.subnet_private_id_2
 
   depends_on = [module.eks_module]
 }
