@@ -4,5 +4,5 @@ metadata:
   name: myapp-config
   namespace: dev
 data:
-  DB_HOST: "postgres-service"
-  DB_NAME: "testdb"
+  DB_HOST: "dev-rds-instance.c4lskakqaove.us-east-1.rds.amazonaws.com"
+  DB_NAME: "postgresdb"
