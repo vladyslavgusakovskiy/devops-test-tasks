@@ -12,6 +12,7 @@ spec:
       labels:
         app: myapp
     spec:
+      serviceAccountName: s3-read-write-sa
       containers:
       - name: myapp
         image: vlad584/python_restapi_app:3.0
@@ -49,7 +50,7 @@ spec:
           httpGet:
             path: /health
             port: 8000
-          initialDelaySeconds: 60
+          initialDelaySeconds: 30
           periodSeconds: 10
         readinessProbe:
           httpGet:
