@@ -16,10 +16,14 @@ jobs:
         python-version: "3.11"
     - name: Install dependencies
       run: |
-        cd tasks/deployment-infrastructure
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        python -m pip install --upgrade pip
+        pip install flake8
+        pip install -r tasks/deployment-infrastructure/app/requirements.txt
+    - name: Lint with flake8
+      run: |
+        flake8 . --show-source --statistics
     - name: Test with pytest
       run: |
         cd tasks/deployment-infrastructure
+        pip install pytest pytest-cov
         pytest
